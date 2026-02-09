@@ -6,6 +6,7 @@
   "scripts": {
     "build": "ng build colors-to-tokens-plugin",
     "build:dev": "ng build colors-to-tokens-plugin --configuration development",
+    "watch": "ng build colors-to-tokens-plugin --configuration development --watch",
     "serve": "ng serve colors-to-tokens-plugin",
     "lint": "eslint .",
     "test": "vitest"
