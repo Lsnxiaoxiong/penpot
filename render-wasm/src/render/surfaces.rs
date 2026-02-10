@@ -350,6 +350,7 @@ impl Surfaces {
             SurfaceId::Strokes => &self.shape_strokes,
             SurfaceId::Debug => &self.debug,
             SurfaceId::UI => &self.ui,
+            SurfaceId::Export => &self.export
         }
     }
 

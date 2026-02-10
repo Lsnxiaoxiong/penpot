@@ -1632,6 +1632,7 @@ impl RenderState {
                     false,
                     Some(shadow.offset),
                     None,
+                    target_surface
                 );
             });
 
