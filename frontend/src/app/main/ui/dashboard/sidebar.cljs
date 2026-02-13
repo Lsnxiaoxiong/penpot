@@ -30,6 +30,7 @@
    [app.main.ui.dashboard.subscription :refer [dashboard-cta*
                                                get-subscription-type
                                                menu-team-icon*
+                                               nitrate-sidebar*
                                                show-subscription-dashboard-banner?
                                                subscription-sidebar*]]
    [app.main.ui.dashboard.team-form]
@@ -1007,6 +1008,9 @@
         show-comments* (mf/use-state false)
         show-comments? @show-comments*
 
+        show-nitrate? (and (contains? cf/flags :nitrate)
+                           (:nitrate-licence profile))
+
         handle-hide-comments
         (mf/use-fn
          (fn []
@@ -1056,10 +1060,12 @@
            (dom/open-new-window "https://penpot.app/pricing")))]
 
     [:*
-     (when (contains? cf/flags :subscriptions)
-       (if (show-subscription-dashboard-banner? profile)
-         [:> dashboard-cta* {:profile profile}]
-         [:> subscription-sidebar* {:profile profile}]))
+     (if show-nitrate?
+       [:> nitrate-sidebar* {:profile profile}]
+       (when (contains? cf/flags :subscriptions)
+         (if (show-subscription-dashboard-banner? profile)
+           [:> dashboard-cta* {:profile profile}]
+           [:> subscription-sidebar* {:profile profile}])))
 
      ;; TODO remove this block when subscriptions is full implemented
      (when (contains? cf/flags :subscriptions-old)
