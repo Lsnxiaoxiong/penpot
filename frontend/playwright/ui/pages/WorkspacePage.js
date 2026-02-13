@@ -65,6 +65,7 @@ export class WorkspacePage extends BaseWebSocketPage {
       );
     }
 
+    // TODO remove
     async waitForTextSpanContent(nth = 0) {
       const textSpan = await this.waitForTextSpan(nth);
       const textContent = await textSpan.textContent();
@@ -382,10 +383,17 @@ export class WorkspacePage extends BaseWebSocketPage {
     const timeToWait = options?.timeToWait ?? 100;
     await this.page.keyboard.press("T");
     await this.page.waitForTimeout(timeToWait);
+
+    const layersCountBefore = await this.layers.getByTestId("layer-row").count();
     await this.clickAndMove(x1, y1, x2, y2);
-    await expect(this.page.getByTestId("text-editor")).toBeVisible();
 
     if (initialText) {
+      await expect(
+        this.layers
+          .locator('[data-testid="layer-row"][class*="selected"]')
+          .filter({ hasText: "Text" }),
+      ).toBeVisible({ timeout: 5000 });
+
       await this.page.keyboard.type(initialText);
     }
   }
@@ -489,6 +497,19 @@ export class WorkspacePage extends BaseWebSocketPage {
         .getByTestId("layer-row")
         .filter({ has: this.page.getByText(name) }),
     ).toHaveClass(/selected/);
+  }
+
+  /**
+   * Gets the name of the currently selected shape from the layers panel.
+   * For text shapes, the name equals the text content (up to 280 chars).
+   * WASM-agnostic: does not rely on editor DOM.
+   */
+  async getSelectedShapeName() {
+    const selectedLayer = this.layers.locator(
+      '[data-testid="layer-row"][class*="selected"]',
+    ).first();
+    await selectedLayer.waitFor({ state: "visible" });
+    return (await selectedLayer.innerText()).trim();
   }
 
   async expectHiddenToolbarOptions() {

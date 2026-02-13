@@ -24,10 +24,10 @@ test("Create a new text shape", async ({ page }) => {
   await workspace.goToWorkspace();
   await workspace.createTextShape(190, 150, 300, 200, initialText);
 
-  const textContent = await workspace.textEditor.waitForTextSpanContent();
-  expect(textContent).toBe(initialText);
-
   await workspace.textEditor.stopEditing();
+
+  const textContent = await workspace.getSelectedShapeName();
+  expect(textContent).toBe(initialText);
 });
 
 test("Create a new text shape from pasting text", async ({ page, context }) => {
@@ -46,10 +46,8 @@ test("Create a new text shape from pasting text", async ({ page, context }) => {
 
   await page.waitForTimeout(timeToWait);
 
-  const textContent = await workspace.textEditor.waitForTextSpanContent();
+  const textContent = await workspace.getSelectedShapeName();
   expect(textContent).toBe(textToPaste);
-
-  await workspace.textEditor.stopEditing();
 });
 
 test("Create a new text shape from pasting text using context menu", async ({
@@ -87,9 +85,9 @@ test("Update an already created text shape by appending text", async ({
   await workspace.textEditor.startEditing();
   await workspace.textEditor.moveFromEnd(0);
   await page.keyboard.type(" dolor sit amet");
-  const textContent = await workspace.textEditor.waitForTextSpanContent();
-  expect(textContent).toBe("Lorem ipsum dolor sit amet");
   await workspace.textEditor.stopEditing();
+  const textContent = await workspace.getSelectedShapeName();
+  expect(textContent).toBe("Lorem ipsum dolor sit amet");
 });
 
 test("Update an already created text shape by prepending text", async ({
@@ -105,9 +103,9 @@ test("Update an already created text shape by prepending text", async ({
   await workspace.textEditor.startEditing();
   await workspace.textEditor.moveFromStart(0);
   await page.keyboard.type("Dolor sit amet ");
-  const textContent = await workspace.textEditor.waitForTextSpanContent();
-  expect(textContent).toBe("Dolor sit amet Lorem ipsum");
   await workspace.textEditor.stopEditing();
+  const textContent = await workspace.getSelectedShapeName();
+  expect(textContent).toBe("Dolor sit amet Lorem ipsum");
 });
 
 test.skip("Update an already created text shape by inserting text in between", async ({
@@ -123,9 +121,9 @@ test.skip("Update an already created text shape by inserting text in between", a
   await workspace.textEditor.startEditing();
   await workspace.textEditor.moveFromStart(5);
   await page.keyboard.type(" dolor sit amet");
-  const textContent = await workspace.textEditor.waitForTextSpanContent();
-  expect(textContent).toBe("Lorem dolor sit amet ipsum");
   await workspace.textEditor.stopEditing();
+  const textContent = await workspace.getSelectedShapeName();
+  expect(textContent).toBe("Lorem dolor sit amet ipsum");
 });
 
 test("Update a new text shape appending text by pasting text", async ({
@@ -146,10 +144,10 @@ test("Update a new text shape appending text by pasting text", async ({
   await workspace.textEditor.startEditing();
   await workspace.textEditor.moveFromEnd();
   await workspace.paste("keyboard");
-  const textContent = await workspace.textEditor.waitForTextSpanContent();
-  expect(textContent).toBe("Lorem ipsum dolor sit amet");
   await workspace.textEditor.stopEditing();
-});
+  const textContent = await workspace.getSelectedShapeName();
+  expect(textContent).toBe("Lorem ipsum dolor sit amet");
+  });
 
 test.skip("Update a new text shape prepending text by pasting text", async ({
   page,
@@ -169,9 +167,9 @@ test.skip("Update a new text shape prepending text by pasting text", async ({
   await workspace.textEditor.startEditing();
   await workspace.textEditor.moveFromStart();
   await workspace.paste("keyboard");
-  const textContent = await workspace.textEditor.waitForTextSpanContent();
-  expect(textContent).toBe("Dolor sit amet Lorem ipsum");
   await workspace.textEditor.stopEditing();
+  const textContent = await workspace.getSelectedShapeName();
+  expect(textContent).toBe("Dolor sit amet Lorem ipsum");
 });
 
 test("Update a new text shape replacing (starting) text with pasted text", async ({
@@ -192,10 +190,9 @@ test("Update a new text shape replacing (starting) text with pasted text", async
 
   await workspace.paste("keyboard");
 
-  const textContent = await workspace.textEditor.waitForTextSpanContent();
-  expect(textContent).toBe("Dolor sit amet ipsum");
-
   await workspace.textEditor.stopEditing();
+  const textContent = await workspace.getSelectedShapeName();
+  expect(textContent).toBe("Dolor sit amet ipsum");
 });
 
 test("Update a new text shape replacing (ending) text with pasted text", async ({
@@ -216,10 +213,9 @@ test("Update a new text shape replacing (ending) text with pasted text", async (
 
   await workspace.paste("keyboard");
 
-  const textContent = await workspace.textEditor.waitForTextSpanContent();
-  expect(textContent).toBe("Lorem dolor sit amet");
-
   await workspace.textEditor.stopEditing();
+  const textContent = await workspace.getSelectedShapeName();
+  expect(textContent).toBe("Lorem dolor sit amet");
 });
 
 test("Update a new text shape replacing (in between) text with pasted text", async ({
@@ -240,10 +236,10 @@ test("Update a new text shape replacing (in between) text with pasted text", asy
 
   await workspace.paste("keyboard");
 
-  const textContent = await workspace.textEditor.waitForTextSpanContent();
+  await workspace.textEditor.stopEditing();
+  const textContent = await workspace.getSelectedShapeName();
   expect(textContent).toBe("Lordolor sit ametsum");
 
-  await workspace.textEditor.stopEditing();
 });
 
 test("Update text font size selecting a part of it (starting)", async ({
@@ -289,13 +285,12 @@ test.skip("Update text line height selecting a part of it (starting)", async ({
   );
   expect(lineHeight).toBe("1.4");
 
-  const textContent = await workspace.textEditor.waitForTextSpanContent();
-  expect(textContent).toBe("Lorem ipsum");
-
   await workspace.textEditor.stopEditing();
+  const textContent = await workspace.getSelectedShapeName();
+  expect(textContent).toBe("Lorem ipsum");
 });
 
-test.skip("Update text letter spacing selecting a part of it (starting)", async ({
+test("Update text letter spacing selecting a part of it (starting)", async ({
   page,
 }) => {
   const workspace = new WorkspacePage(page, {
