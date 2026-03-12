@@ -83,3 +83,112 @@ export interface ExecuteCodeTaskResultData<T> {
      */
     log: string;
 }
+
+// ============================================================
+// AI UI Generator Types
+// ============================================================
+
+/**
+ * Parameters for the generate-ui task.
+ */
+export interface GenerateUITaskParams {
+    /**
+     * Natural language description of the UI to generate.
+     */
+    prompt: string;
+
+    /**
+     * AI provider to use: 'anthropic' or 'openai'.
+     */
+    provider: 'anthropic' | 'openai';
+
+    /**
+     * Optional: Model name (uses provider default if not specified).
+     */
+    model?: string;
+
+    /**
+     * Optional: File ID context.
+     */
+    fileId?: string;
+
+    /**
+     * Optional: Page ID context.
+     */
+    pageId?: string;
+}
+
+/**
+ * Result data from generate-ui task execution.
+ */
+export interface GenerateUITaskResultData {
+    /**
+     * Whether the generation was successful.
+     */
+    success: boolean;
+
+    /**
+     * Generated JavaScript/ClojureScript code.
+     */
+    generatedCode: string;
+
+    /**
+     * Result from executing the generated code.
+     */
+    executionResult?: any;
+
+    /**
+     * Execution log from plugin.
+     */
+    executionLog?: string;
+
+    /**
+     * AI response metadata.
+     */
+    metadata: {
+        provider: string;
+        model: string;
+        tokensUsed: number;
+        duration: number;
+    };
+}
+
+/**
+ * Parameters for validate-api-key task.
+ */
+export interface ValidateApiKeyTaskParams {
+    /**
+     * AI provider to validate.
+     */
+    provider: 'anthropic' | 'openai';
+
+    /**
+     * The API key to validate.
+     */
+    apiKey: string;
+}
+
+/**
+ * Result data from validate-api-key task.
+ */
+export interface ValidateApiKeyTaskResultData {
+    /**
+     * Whether the API key is valid.
+     */
+    valid: boolean;
+
+    /**
+     * Provider name.
+     */
+    provider: string;
+
+    /**
+     * Optional message or error details.
+     */
+    message?: string;
+
+    /**
+     * Optional error details.
+     */
+    error?: string;
+}
