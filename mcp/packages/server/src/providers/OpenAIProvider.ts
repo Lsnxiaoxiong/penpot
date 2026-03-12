@@ -75,7 +75,7 @@ export class OpenAIProvider extends AIProvider {
             throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
         }
 
-        const data = await response.json();
+        const data = await response.json() as { choices?: Array<{ message?: { content?: string } }>; usage?: { total_tokens: number } };
         const endTime = Date.now();
 
         const content = data.choices?.[0]?.message?.content || "";

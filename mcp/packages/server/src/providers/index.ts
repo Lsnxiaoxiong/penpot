@@ -1,6 +1,9 @@
 export { AIProvider, AIProviderConfig, AIGenerationResult } from "./AIProvider";
 export { AnthropicProvider } from "./AnthropicProvider";
 export { OpenAIProvider } from "./OpenAIProvider";
+import { AIProvider } from "./AIProvider";
+import { AnthropicProvider } from "./AnthropicProvider";
+import { OpenAIProvider } from "./OpenAIProvider";
 
 /**
  * Factory function to get the appropriate provider instance

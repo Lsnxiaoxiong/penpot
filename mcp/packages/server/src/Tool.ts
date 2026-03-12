@@ -20,7 +20,7 @@ export class EmptyToolArgs {
  * @template TArgs - The strongly-typed arguments class for this tool
  */
 export abstract class Tool<TArgs extends object> {
-    private readonly logger = createLogger("Tool");
+    protected readonly logger = createLogger("Tool");
 
     /** monotonically increasing counter for unique tool execution IDs */
     private static executionCounter = 0;

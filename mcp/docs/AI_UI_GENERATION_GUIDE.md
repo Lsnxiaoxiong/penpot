@@ -14,6 +14,9 @@ export PENPOT_MCP_ANTHROPIC_API_KEY=sk-ant-...
 
 # For OpenAI GPT
 export PENPOT_MCP_OPENAI_API_KEY=sk-...
+
+# For DeepSeek (OpenAI-compatible)
+export PENPOT_MCP_DEEPSEEK_API_KEY=sk-...
 ```
 
 Or create a `.env` file in the `mcp/` directory:
@@ -21,6 +24,7 @@ Or create a `.env` file in the `mcp/` directory:
 ```bash
 PENPOT_MCP_ANTHROPIC_API_KEY=sk-ant-...
 PENPOT_MCP_OPENAI_API_KEY=sk-...
+PENPOT_MCP_DEEPSEEK_API_KEY=sk-...
 ```
 
 ### 2. Start the MCP Server
@@ -71,10 +75,15 @@ Generates UI designs in Penpot based on natural language descriptions.
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
 | prompt | string | Yes | - | Natural language description of the UI |
-| provider | string | No | anthropic | AI provider to use (anthropic or openai) |
+| provider | string | No | anthropic | AI provider to use (anthropic, openai, or deepseek) |
 | model | string | No | - | Specific model to use |
 | fileId | string | No | - | Target file ID for context |
 | pageId | string | No | - | Target page ID for context |
+
+**Supported Providers:**
+- `anthropic` - Anthropic Claude (claude-sonnet-4-5-20250929, claude-opus-4-5-20251106)
+- `openai` - OpenAI GPT (gpt-4o, gpt-4o-mini, gpt-4-turbo)
+- `deepseek` - DeepSeek (deepseek-chat, deepseek-reasoner) - uses OpenAI-compatible API
 
 **Response:**
 ```json
@@ -191,6 +200,18 @@ Create a card component with:
 - Subtle shadow effect
 ```
 
+### Using DeepSeek (Cost-Effective)
+```bash
+# DeepSeek uses OpenAI-compatible API with lower costs
+export PENPOT_MCP_DEEPSEEK_API_KEY=sk-...
+
+# Use deepseek-chat for standard generation
+claude mcp call generate_ui --provider deepseek --model deepseek-chat --prompt "Create a pricing card with three tiers"
+
+# Use deepseek-reasoner for complex reasoning tasks
+claude mcp call generate_ui --provider deepseek --model deepseek-reasoner --prompt "Create a complex data visualization dashboard"
+```
+
 ## Troubleshooting
 
 ### "No API key configured"
@@ -222,8 +243,19 @@ pnpm run bootstrap
 
 **Solution:**
 - Simplify your prompt
-- Try a different provider (Claude vs GPT)
+- Try a different provider (Claude vs GPT vs DeepSeek)
 - Check the execution log for error details
+
+### DeepSeek-specific issues
+
+**"Invalid API key" for DeepSeek:**
+- Ensure you're using `PENPOT_MCP_DEEPSEEK_API_KEY` (not `OPENAI`)
+- DeepSeek keys start with `sk-` (same format as OpenAI)
+- Verify key at https://platform.deepseek.com/
+
+**Wrong model for DeepSeek:**
+- Use `deepseek-chat` for standard UI generation (non-reasoning mode)
+- Use `deepseek-reasoner` for complex problems requiring step-by-step reasoning
 
 ### Rate limiting
 
@@ -252,6 +284,14 @@ Approximate costs per generation (as of 2024):
 | OpenAI | GPT-4o-mini | ~2000 | ~$0.003 |
 
 Costs vary based on prompt complexity and response length.
+
+**DeepSeek** (cost-effective alternative):
+| Model | Avg Tokens | Cost/Request |
+|-------|------------|--------------|
+| deepseek-chat | ~2000 | ~$0.0005 |
+| deepseek-reasoner | ~2000 | ~$0.001 |
+
+DeepSeek provides OpenAI-compatible API at significantly lower costs.
 
 ## Getting Help
 
