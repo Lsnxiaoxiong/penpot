@@ -12,7 +12,7 @@ import { getProvider } from "../providers";
 export class ValidateApiKeyArgs {
     static schema = {
         provider: z
-            .enum(["anthropic", "openai"])
+            .enum(["anthropic", "openai", "deepseek"])
             .describe("AI provider to validate"),
         apiKey: z
             .string()
@@ -20,7 +20,7 @@ export class ValidateApiKeyArgs {
             .describe("The API key to validate"),
     };
 
-    provider!: "anthropic" | "openai";
+    provider!: "anthropic" | "openai" | "deepseek";
     apiKey!: string;
 }
 
@@ -44,7 +44,9 @@ export class ValidateApiKeyTool extends Tool<ValidateApiKeyArgs> {
     }
 
     protected async executeCore(args: ValidateApiKeyArgs): Promise<ToolResponse> {
-        const provider = getProvider(args.provider);
+        // For deepseek, use custom base URL
+        const baseUrl = args.provider === "deepseek" ? "https://api.deepseek.com/v1" : undefined;
+        const provider = getProvider(args.provider, baseUrl);
 
         try {
             this.logger.info("Validating API key for provider: %s", args.provider);

@@ -1,13 +1,28 @@
 import { AIProvider, AIProviderConfig, AIGenerationResult } from "./AIProvider";
 
 export class OpenAIProvider extends AIProvider {
-    private readonly baseUrl: string = "https://api.openai.com/v1";
+    private readonly baseUrl: string;
+
+    constructor(baseUrl?: string) {
+        super();
+        this.baseUrl = baseUrl || "https://api.openai.com/v1";
+    }
 
     getProviderName(): string {
         return "openai";
     }
 
     getAvailableModels(): string[] {
+        // For custom OpenAI-compatible endpoints, return common models
+        if (this.baseUrl !== "https://api.openai.com/v1") {
+            return [
+                "deepseek-chat",
+                "deepseek-reasoner",
+                "gpt-4o",
+                "gpt-4o-mini",
+                "gpt-4-turbo",
+            ];
+        }
         return [
             "gpt-4o",
             "gpt-4o-mini",

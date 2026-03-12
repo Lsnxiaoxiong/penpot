@@ -17,7 +17,7 @@ export class GenerateUIArgs {
             .min(1, "Prompt cannot be empty")
             .describe("Natural language description of the UI to generate"),
         provider: z
-            .enum(["anthropic", "openai"])
+            .enum(["anthropic", "openai", "deepseek"])
             .default("anthropic")
             .describe("AI provider to use"),
         model: z
@@ -35,7 +35,7 @@ export class GenerateUIArgs {
     };
 
     prompt!: string;
-    provider!: "anthropic" | "openai";
+    provider!: "anthropic" | "openai" | "deepseek";
     model?: string;
     fileId?: string;
     pageId?: string;
@@ -64,7 +64,9 @@ export class GenerateUITool extends Tool<GenerateUIArgs> {
 
     protected async executeCore(args: GenerateUIArgs): Promise<ToolResponse> {
         // Get the appropriate AI provider
-        const provider = getProvider(args.provider);
+        // For deepseek, use custom base URL
+        const baseUrl = args.provider === "deepseek" ? "https://api.deepseek.com/v1" : undefined;
+        const provider = getProvider(args.provider, baseUrl);
 
         // Load API key from configuration
         const apiKey = await this.loadApiKey(args.provider);
@@ -122,7 +124,14 @@ export class GenerateUITool extends Tool<GenerateUIArgs> {
      * Load API key from environment or configuration
      */
     private async loadApiKey(provider: string): Promise<string | null> {
-        const envVarName = `PENPOT_MCP_${provider.toUpperCase()}_API_KEY`;
+        // Map provider names to environment variable names
+        const providerEnvMap: Record<string, string> = {
+            anthropic: "ANTHROPIC",
+            openai: "OPENAI",
+            deepseek: "DEEPSEEK",
+        };
+        const envName = providerEnvMap[provider] || provider.toUpperCase();
+        const envVarName = `PENPOT_MCP_${envName}_API_KEY`;
         return process.env[envVarName] || null;
     }
 }
