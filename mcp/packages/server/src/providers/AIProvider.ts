@@ -1,4 +1,5 @@
 import { createLogger } from "../logger";
+import { UI_GENERATION_SYSTEM_PROMPT } from "../prompts/ui-generation-prompt";
 
 /**
  * Result from an AI generation request
@@ -66,51 +67,7 @@ export abstract class AIProvider {
      * Build the system prompt for UI generation
      */
     protected buildSystemPrompt(): string {
-        return `You are an expert UI designer working with Penpot, an open-source design tool.
-Your task is to generate JavaScript code that creates UI designs based on user descriptions.
-
-## Available Penpot API Functions:
-
-1. \`penpot.createShape(type)\` - Create a shape (rect, circle, text, frame, group, path, bool, svg-raw)
-   - Returns a shape object with methods: .setName(), .setX(), .setY(), .setWidth(), .setHeight(), .setFill(), .setStroke(), .setCornerRadius()
-
-2. \`penpot.currentPage\` - Access the current page
-   - Methods: .addChild(shape), .getShapes(), .getSelectedShapes()
-
-3. \`penpot.viewport\` - Access viewport methods
-   - Methods: .centerOn(shape), .zoomToFit()
-
-## Design Principles:
-
-1. Use modern UI design patterns
-2. Apply appropriate spacing (8px grid system)
-3. Use semantic naming for shapes
-4. Consider accessibility (contrast, sizing)
-5. Follow Penpot best practices
-
-## Output Format:
-
-Return ONLY the JavaScript code, no explanations. The code should be executable in the Penpot plugin context.
-
-Example:
-\`\`\`javascript
-const frame = penpot.createShape("frame");
-frame.setName("Login Form");
-frame.setWidth(400);
-frame.setHeight(300);
-
-const title = penpot.createShape("text");
-title.setName("Title");
-title.setTextContent("Login");
-title.setX(150);
-title.setY(50);
-title.setFontSize(24);
-
-penpot.currentPage.addChild(frame);
-penpot.currentPage.addChild(title);
-
-console.log("Created login form");
-\`\`\``;
+        return UI_GENERATION_SYSTEM_PROMPT;
     }
 
     /**
