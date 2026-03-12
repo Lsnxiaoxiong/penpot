@@ -258,6 +258,28 @@ The Penpot MCP server can be configured using environment variables.
 |-------------------------------------------|-----------------------------------------------------------------------------------------|--------------|
 | `PENPOT_MCP_PLUGIN_SERVER_LISTEN_ADDRESS` | Address on which the plugin web server listens (single address or comma-separated list) | (local only) |
 
+### AI Configuration
+
+To use the AI UI generation features, you need to configure API keys for your preferred AI provider:
+
+```bash
+# .env file
+PENPOT_MCP_ANTHROPIC_API_KEY=sk-ant-...
+PENPOT_MCP_OPENAI_API_KEY=sk-...
+```
+
+**Getting API Keys:**
+- **Anthropic**: Visit https://console.anthropic.com/ to create an account and get an API key
+- **OpenAI**: Visit https://platform.openai.com/ to create an account and get an API key
+
+**Security Note:** Never commit your API keys to version control. The `.env` file is gitignored by default.
+
+**Available AI Tools:**
+- `generate_ui` - Generate UI designs from natural language descriptions
+- `validate_api_key` - Test API key validity
+
+See [docs/AI_UI_GENERATION_GUIDE.md](docs/AI_UI_GENERATION_GUIDE.md) for detailed usage.
+
 ## Beyond Local Execution
 
 The above instructions describe how to run the MCP server and plugin server locally.

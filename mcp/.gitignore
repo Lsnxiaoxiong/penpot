@@ -1,4 +1,4 @@
-.idea
+.Idea
 .claude
 node_modules
 dist
@@ -7,6 +7,11 @@ dist
 *.orig
 temp
 *.tsbuildinfo
+
+# Environment variables
+.env
+.env.local
+.env.*.local
 
 # Log files
 logs/
